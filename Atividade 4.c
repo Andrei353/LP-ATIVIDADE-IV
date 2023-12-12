@@ -1,91 +1,102 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
 #include <time.h>
 
-struct contaBancaria {
-    char nome[200], numero[200], tipo[200];
-    float saldo, transferencia, depositado;
+// Declarando funções
+
+struct ContaBancaria
+{
+    char numeroConta[250];
+    char nomeTitular[250];
+    float saldo;
+    char tipoConta[250];
 };
 
-float deposito (float valorInicial, float valorDeposito) {
-    return valorInicial + valorDeposito;
+void depositar(struct ContaBancaria *conta, float valor)
+{
+    conta->saldo += valor;
+    printf("Deposito de R$%.2f realizado com sucesso.\n", valor);
 }
 
-float saque (float valorInicial, float valorSaque) {
-    return valorInicial - valorSaque;
+void sacar(struct ContaBancaria *conta, float valor)
+{
+    if (valor > conta->saldo)
+    {
+        printf("Saldo insuficiente para realizar o saque.\n");
+    }
+    else
+    {
+        conta->saldo -= valor;
+        printf("Saque de R$%.2f realizado com sucesso.\n", valor);
+    }
 }
 
-int main ( ) {
+void imprimirSaldo(struct ContaBancaria conta)
+{
+    printf("Saldo atual: R$%.2f\n", conta.saldo);
+}
 
+int main()
+{
+    setlocale(LC_ALL, "portuguese");
+    // Declarando Variaveis
+
+    struct ContaBancaria contas;
     int opcao;
-    float depositoAtualizado, saqueAtualizado;
-    struct contaBancaria dados;
+    float valor;
 
-
-    do {
-        printf("O que você deseja fazer hoje?\n");
-        printf("1 - Registrar conta nova\n");
-        printf("2 - Depósito \n");
-        printf("3 - Saque\n");
-        printf("4 - Sair do programa\n");
-        printf("Resposta: ");
+    do
+    {
+        printf("--------Bem-vindo--------");
+        printf("\nEscolha uma operacao:\n");
+        printf("1 - Registrar Conta\n");
+        printf("2 - Depositar dinheiro\n");
+        printf("3 - Sacar dinheiro\n");
+        printf("4 - Imprimir saldo\n");
+        printf("5 - Sair do programa\n");
+        printf("\nDigite sua Escolha:");
         scanf("%d", &opcao);
 
-        system("cls||clear");
-
-        switch (opcao) {
+        switch (opcao)
+        {
         case 1:
             fflush(stdin);
 
             printf("Nome do titular: ");
-            gets(dados.nome);
+            gets(contas.nomeTitular);
 
             printf("Número da conta: ");
-            gets(dados.numero);
+            gets(contas.numeroConta);
 
             printf("Tipo de conta desejada: ");
-            gets(dados.tipo);
+            gets(contas.tipoConta);
 
             printf("Qual saldo terá na conta: ");
-            scanf("%f", &dados.saldo);
+            scanf("%f", &contas.saldo);
 
             break;
-        
         case 2:
-            printf("Quanto você deseja depositar: ");
-            scanf("%f", &dados.depositado);
-
-            depositoAtualizado = deposito(dados.saldo, dados.depositado);
-
-            printf("Nome do titular: %s\n", dados.nome);
-            printf("Número da conta: %s\n", dados.numero);
-            printf("Tipo da conta: %s\n", dados.tipo);
-            printf("Saldo pré-depósito: %.2f\n", dados.saldo);
-            printf("Saldo atual da conta: %.2f\n", depositoAtualizado);
-
+            printf("Digite o valor a ser depositado: ");
+            scanf("%f", &valor);
+            depositar(&contas, valor);
             break;
-
         case 3:
-            printf("Quanto você deseja sacar: ");
-            scanf("%f", &dados.transferencia);
-
-            saqueAtualizado = saque(dados.saldo, dados.transferencia);
-
-            printf("Nome do titular: %s\n", dados.nome);
-            printf("Número da conta: %s\n", dados.numero);
-            printf("Tipo da conta: %s\n", dados.tipo);
-            printf("Saldo pré-saque: %.2f\n", dados.saldo);
-            printf("Saldo atual da conta: %.2f\n", saqueAtualizado);
-
+            printf("Digite o valor a ser sacado: ");
+            scanf("%f", &valor);
+            sacar(&contas, valor);
             break;
-        
+        case 4:
+            imprimirSaldo(contas);
+            break;
+        case 5:
+            printf("Saindo da sua Conta Bancaria.\n");
+            break;
         default:
-            break;
+            printf("Opcao invalida. Escolha novamente.\n");
         }
-    } while (opcao != 0);
+    } while (opcao != 4);
 
     return 0;
 }
